@@ -1,5 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import Home from "./pages/Home.jsx";
+import ProductDetail from "./pages/ProductDetail.jsx";
 
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/articoli/:id" element={<ProductDetail />} />
 
       </Routes>
     </div>
