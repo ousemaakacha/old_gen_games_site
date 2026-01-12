@@ -8,8 +8,10 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const categories = [...new Set(articles.map(a => a.categorie).filter(Boolean))];
 
-  const PAGE_SIZE = 15;
+  const PAGE_SIZE = 12;
   const [page, setPage] = useState(1);
 
 
@@ -39,14 +41,14 @@ export default function Home() {
   }, []);
 
   // filtro per serach
-  const filtered = articles
+  const filtered = articles.filter((a) => {
+    const matchSearch = !search ||
+      String(a.name ?? a.slug ?? "").toLowerCase().includes(search.toLowerCase());
 
-    .filter((a) => {
-      if (!search) return true;
-      const t = String(a.name ?? a.slug ?? "").toLowerCase();
-      return t.includes(search.toLowerCase());
-    });
+    const matchCategory = !category || a.categorie === category;
 
+    return matchSearch && matchCategory;
+  });
   // limite pagina che mostro
   const visible = filtered.slice(0, page * PAGE_SIZE);
 
@@ -61,6 +63,17 @@ export default function Home() {
           </div>
 
           <div className="col-12 col-md-6 d-flex gap-2 justify-content-md-end">
+            <select
+              className="form-select"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              style={{ maxWidth: 200 }}
+            >
+              <option value="">Tutte le categorie</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
             <input
               className="form-control"
               placeholder="Cerca per titolo..."
