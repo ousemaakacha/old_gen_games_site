@@ -111,7 +111,7 @@ const matchSearch = !search ||
               <div className="col-12 col-sm-6 col-lg-4 col-xl-3" key={id ?? title}>
                 <div className="card h-100 shadow-sm">
                   <div className="ratio ratio-4x3 bg-body-tertiary">
-                    <img src={image} className="w-100 h-100 img-cover" alt={title} />
+                    <img src={image} className="card-img-top img-fluid" alt={title} />
                   </div>
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{title}</h5>
