@@ -1,15 +1,7 @@
-<<<<<<< HEAD
-
 # Logs
 logs
 .log
 npm-debug.log
-=======
-# Logs
-logs
-*.log
-npm-debug.log*
->>>>>>> origin/main
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*

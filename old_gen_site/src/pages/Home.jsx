@@ -10,9 +10,9 @@ export default function Home() {
   const [search, setSearch] = useState("");
 
   const PAGE_SIZE = 15;
-  const [page, setPage] = useState(1); 
+  const [page, setPage] = useState(1);
 
- 
+
 
   useEffect(() => {
     async function loadArticles() {
@@ -49,7 +49,7 @@ export default function Home() {
 
   // limite pagina che mostro
   const visible = filtered.slice(0, page * PAGE_SIZE);
-  
+
 
   return (
     <main className="py-4">
@@ -57,7 +57,7 @@ export default function Home() {
         <div className="row g-3 align-items-end mb-3">
           <div className="col-12 col-md-6">
             <h1 className="h3 mb-1">Articoli</h1>
-            
+
           </div>
 
           <div className="col-12 col-md-6 d-flex gap-2 justify-content-md-end">
@@ -69,7 +69,7 @@ export default function Home() {
               style={{ maxWidth: 320 }}
             />
 
-            
+
           </div>
         </div>
 
@@ -77,17 +77,17 @@ export default function Home() {
         {error && <div className="alert alert-danger">{error}</div>}
 
         <div className="row g-3">
-          
+
           {!loading && !error && visible.map((a) => {
             const id = a.id ?? a.ID ?? a.article_id;
             const title = a.name ?? a.slug;
             const desc = a.genres;
             const price = a.price;
             const image = a.image;
-            
+
 
             return (
-              
+
               <div className="col-12 col-sm-6 col-lg-4 col-xl-3" key={id ?? title}>
                 <div className="card h-100 shadow-sm">
                   <div className="ratio ratio-4x3 bg-body-tertiary">
@@ -118,7 +118,7 @@ export default function Home() {
           <div className="d-flex justify-content-center mt-4">
             <button className="btn btn-outline-primary" onClick={() => setPage(page + 1)}>Load more</button>
           </div>
-)}
+        )}
 
       </div>
     </main>

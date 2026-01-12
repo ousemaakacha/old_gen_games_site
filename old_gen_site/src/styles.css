@@ -1,3 +1,8 @@
+.card:hover {
+    transform: translateY(-2px);
+    transition: .12s;
+}
 
-.card:hover { transform: translateY(-2px); transition: .12s; }
-.img-cover { object-fit: cover; }
+.img-cover {
+    object-fit: cover;
+}
