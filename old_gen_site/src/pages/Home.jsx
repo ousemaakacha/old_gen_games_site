@@ -8,7 +8,9 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(() => {
+    return localStorage.getItem("category") || "";
+  });
   const categories = [...new Set(articles.map(a => a.categorie).filter(Boolean))];
 
   const PAGE_SIZE = 12;
@@ -42,7 +44,8 @@ export default function Home() {
 
   // filtro per serach
   const filtered = articles.filter((a) => {
-    const matchSearch = !search ||
+    
+const matchSearch = !search ||
       String(a.name ?? a.slug ?? "").toLowerCase().includes(search.toLowerCase());
 
     const matchCategory = !category || a.categorie === category;
@@ -66,7 +69,11 @@ export default function Home() {
             <select
               className="form-select"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setCategory(value);
+                localStorage.setItem("category", value)
+              }}
               style={{ maxWidth: 200 }}
             >
               <option value="">Tutte le categorie</option>
