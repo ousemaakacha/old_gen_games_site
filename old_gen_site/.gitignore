@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 
 # Logs
 logs
 .log
 npm-debug.log
+=======
+# Logs
+logs
+*.log
+npm-debug.log*
+>>>>>>> origin/main
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
@@ -11,16 +18,27 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+<<<<<<< HEAD
 .local
 
 
 # Editor directories and files
 .vscode/
+=======
+*.local
+
+# Editor directories and files
+.vscode/*
+>>>>>>> origin/main
 !.vscode/extensions.json
 .idea
 .DS_Store
 *.suo
+<<<<<<< HEAD
 .ntvs
+=======
+*.ntvs*
+>>>>>>> origin/main
 *.njsproj
 *.sln
 *.sw?
