@@ -42,7 +42,8 @@ export default function Home() {
   const visible = filtered.slice(0, page * PAGE_SIZE);
 
   return (
-    <main className="py-4">
+    <main className="pb-4">
+     <img className="my-img img-fluid" src="jumbo.png" alt="jumbo" />
       <div className="container">
         <div className="row g-3 align-items-end mb-3">
           <div className="col-12 col-md-4">
