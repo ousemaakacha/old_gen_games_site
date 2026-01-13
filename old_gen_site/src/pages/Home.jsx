@@ -6,7 +6,9 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(() => {
+    return localStorage.getItem("category") || "";
+  });
   const PAGE_SIZE = 12;
   const [page, setPage] = useState(1);
 
@@ -50,7 +52,11 @@ export default function Home() {
             <select
               className="form-select"
               value={category}
-              onChange={(e) => { setCategory(e.target.value); setPage(1); }}
+              onChange={(e) => {
+                const value = e.target.value;
+                setCategory(value);
+                localStorage.setItem("category", value)
+              }}
             >
               <option value="">Tutte le categorie</option>
               {categories.map(cat => (
