@@ -22,7 +22,7 @@ export default function App() {
   };
 
   return (
-    <div>
+    <div className="app-wrapper">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

@@ -22,6 +22,20 @@ body {
     margin: 0;
 }
 
+#root {
+    min-height: 100vh;
+}
+
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -96,7 +110,6 @@ main h1.h3,
 
 .form-select {
     max-width: 220px;
-
     appearance: auto;
 }
 
@@ -407,6 +420,51 @@ main h1.h3,
     }
 }
 
+.footer {
+    background: var(--brown-dark);
+    border-top: 3px solid var(--accent-amber);
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: var(--accent-amber);
+    font-size: 0.5rem;
+}
+
+.footer-container span:first-child {
+    flex: 1;
+    text-align: left;
+}
+
+.footer-container span:nth-child(2) {
+    flex: 1;
+    text-align: center;
+}
+
+.footer-container span:last-child {
+    flex: 1;
+    text-align: right;
+}
+
+@media (max-width: 767px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-container span:first-child,
+    .footer-container span:nth-child(2),
+    .footer-container span:last-child {
+        text-align: center;
+    }
+}
+
 .scroll-top-btn {
     position: fixed;
     bottom: 25px;
@@ -529,8 +587,16 @@ main h1.h3,
         width: 33.333%;
     }
 
+    .col-md-5 {
+        width: 41.666%;
+    }
+
     .col-md-6 {
         width: 50%;
+    }
+
+    .col-md-7 {
+        width: 58.333%;
     }
 
     .col-md-8 {
@@ -630,28 +696,4 @@ main h1.h3,
 ::selection {
     background-color: var(--accent-amber);
     color: var(--brown-dark);
-}
-
-.footer {
-    background: var(--brown-dark);
-    border-top: 3px solid var(--accent-amber);
-    padding: 1rem 0;
-    margin-top: 2rem;
-}
-
-.footer-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    color: var(--accent-amber);
-    font-size: 0.5rem;
-}
-
-@media (max-width: 767px) {
-    .footer-container {
-        flex-direction: column;
-        text-align: center;
-    }
 }
