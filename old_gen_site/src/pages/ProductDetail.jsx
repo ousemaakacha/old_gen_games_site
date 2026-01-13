@@ -12,10 +12,8 @@ export default function ProductDetail() {
             try {
                 setError("");
                 setLoading(true);
-
                 const res = await fetch(`/api/articles/${id}`);
                 if (!res.ok) throw new Error("Prodotto non trovato");
-
                 const data = await res.json();
                 const item = Array.isArray(data) ? data[0] : (data.data || data);
                 setArticle(item);
@@ -25,111 +23,120 @@ export default function ProductDetail() {
                 setLoading(false);
             }
         }
-
         loadArticle();
     }, [id]);
 
     if (loading) {
         return (
-            <div className="container py-5">
-                <div className="alert alert-info">Caricamento...</div>
-            </div>
+            <main className="py-4">
+                <div className="container">
+                    <div className="alert alert-info">Caricamento...</div>
+                </div>
+            </main>
         );
     }
 
     if (error) {
         return (
-            <div className="container py-5">
-                <div className="alert alert-danger">{error}</div>
-                <Link to="/" className="btn btn-primary">Torna alla Home</Link>
-            </div>
+            <main className="py-4">
+                <div className="container">
+                    <div className="alert alert-danger">{error}</div>
+                    <Link to="/" className="btn btn-primary">Torna alla Home</Link>
+                </div>
+            </main>
         );
     }
 
     if (!article) {
         return (
-            <div className="container py-5">
-                <div className="alert alert-warning">Prodotto non trovato</div>
-                <Link to="/" className="btn btn-primary">Torna alla Home</Link>
-            </div>
+            <main className="py-4">
+                <div className="container">
+                    <div className="alert alert-warning">Prodotto non trovato</div>
+                    <Link to="/" className="btn btn-primary">Torna alla Home</Link>
+                </div>
+            </main>
         );
     }
 
     return (
         <main className="py-4">
             <div className="container">
-                <Link to="/" className="btn btn-outline-secondary mb-4">
-                    ← Torna alla Home
-                </Link>
-
-                <div className="card detail-card shadow">
+                <Link to="/" className="btn btn-outline-secondary mb-4">← Torna alla Home</Link>
+                <div className="detail-card">
                     <div className="row g-0">
                         <div className="col-12 col-md-5">
                             <div className="detail-image-wrapper">
                                 {article.image ? (
-                                    <img
-                                        src={article.image}
-                                        alt={article.name}
-                                        className="detail-image"
-                                    />
+                                    <img src={article.image} alt={article.name} className="detail-image" />
                                 ) : (
-                                    <div className="detail-no-image">
-                                        <span className="text-muted">Nessuna immagine</span>
-                                    </div>
+                                    <span className="detail-no-image">Nessuna immagine</span>
                                 )}
                             </div>
                         </div>
-
                         <div className="col-12 col-md-7">
-                            <div className="card-body p-4">
-                                {article.categorie && (
-                                    <span className="badge bg-dark mb-2">{article.categorie.toUpperCase()}</span>
-                                )}
-
-                                <h1 className="h2 mb-2">{article.name || article.slug}</h1>
-
-                                <div className="h3 text-success mb-4">
-                                    € {article.price || "N/D"}
+                            <div className="detail-body">
+                                <div className="detail-header">
+                                    <div className="detail-badges">
+                                        {article.categorie && <span className="badge bg-dark">{article.categorie}</span>}
+                                        {article.pegi && <span className="badge badge-pegi">PEGI {article.pegi}</span>}
+                                        {article.pvp_pve && <span className="badge badge-mode">{article.pvp_pve}</span>}
+                                    </div>
+                                    <h1 className="detail-title">{article.name}</h1>
+                                    {article.genres && <p className="detail-genres"><i className="bi bi-tags"></i> {article.genres}</p>}
                                 </div>
-
-                                <hr />
 
                                 <div className="detail-info">
-                                    {article.production_house && (
-                                        <p><strong>Produttore:</strong> {article.production_house}</p>
-                                    )}
-                                    {article.production_year && (
-                                        <p><strong>Anno:</strong> {article.production_year}</p>
-                                    )}
-                                    {article.genres && (
-                                        <p><strong>Generi:</strong> {article.genres}</p>
-                                    )}
-                                    {article.pegi && (
-                                        <p><strong>PEGI:</strong> {article.pegi}</p>
-                                    )}
-                                    {article.pvp_pve && (
-                                        <p><strong>Modalità:</strong> {article.pvp_pve}</p>
-                                    )}
-                                    {article.dimensions && (
-                                        <p><strong>Dimensioni:</strong> {article.dimensions}</p>
-                                    )}
+                                    <div className="detail-info-grid">
+                                        {article.production_house && (
+                                            <div className="detail-info-item">
+                                                <i className="bi bi-building"></i>
+                                                <div>
+                                                    <span className="detail-label">Produttore</span>
+                                                    <span className="detail-value">{article.production_house}</span>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {article.production_year && (
+                                            <div className="detail-info-item">
+                                                <i className="bi bi-calendar"></i>
+                                                <div>
+                                                    <span className="detail-label">Anno</span>
+                                                    <span className="detail-value">{article.production_year}</span>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {article.dimensions && (
+                                            <div className="detail-info-item">
+                                                <i className="bi bi-box"></i>
+                                                <div>
+                                                    <span className="detail-label">Dimensioni</span>
+                                                    <span className="detail-value">{article.dimensions}</span>
+                                                </div>
+                                            </div>
+                                        )}
+                                        <div className="detail-info-item">
+                                            <i className="bi bi-box-seam"></i>
+                                            <div>
+                                                <span className="detail-label">Disponibilità</span>
+                                                {article.quantity > 0 ? (
+                                                    <span className="detail-value stock-ok">{article.quantity} in magazzino</span>
+                                                ) : (
+                                                    <span className="detail-value stock-no">Esaurito</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div className="mt-4">
-                                    {article.quantity > 0 ? (
-                                        <span className="badge bg-success-subtle text-success fs-6 px-3 py-2">
-                                            Disponibile ({article.quantity} pz)
-                                        </span>
-                                    ) : (
-                                        <span className="badge bg-danger-subtle text-danger fs-6 px-3 py-2">
-                                            Non disponibile
-                                        </span>
-                                    )}
+                                <div className="detail-bottom">
+                                    <div className="detail-price-box">
+                                        <span className="detail-price-label">Prezzo</span>
+                                        <span className="detail-price">{article.price ? `€ ${article.price}` : "N/D"}</span>
+                                    </div>
+                                    <button className="btn btn-primary btn-lg w-100" disabled={article.quantity <= 0}>
+                                        <i className="bi bi-cart-plus"></i> Aggiungi al carrello
+                                    </button>
                                 </div>
-
-                                <button className="btn btn-primary btn-lg w-100 mt-4">
-                                    Aggiungi al carrello
-                                </button>
                             </div>
                         </div>
                     </div>

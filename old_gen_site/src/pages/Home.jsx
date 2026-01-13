@@ -1,35 +1,23 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-
-
 export default function Home() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState(() => {
-    return localStorage.getItem("category") || "";
-  });
-  const categories = [...new Set(articles.map(a => a.categorie).filter(Boolean))];
-
+  const [category, setCategory] = useState("");
   const PAGE_SIZE = 12;
   const [page, setPage] = useState(1);
-
-
 
   useEffect(() => {
     async function loadArticles() {
       try {
         setError("");
         setLoading(true);
-
         const res = await fetch("/api/articles");
         if (!res.ok) throw new Error("Errore fetch: " + res.status);
-
         const data = await res.json();
-
-        // devo prendere  data.data qua p  altrimenti data
         const list = Array.isArray(data) ? data : (data.data || data.articles || []);
         setArticles(list);
       } catch (e) {
@@ -38,58 +26,43 @@ export default function Home() {
         setLoading(false);
       }
     }
-
     loadArticles();
   }, []);
 
-  // filtro per serach
+  const categories = [...new Set(articles.map(a => a.categorie).filter(Boolean))];
+
   const filtered = articles.filter((a) => {
-    
-const matchSearch = !search ||
-      String(a.name ?? a.slug ?? "").toLowerCase().includes(search.toLowerCase());
-
+    const matchSearch = !search || String(a.name ?? a.slug ?? "").toLowerCase().includes(search.toLowerCase());
     const matchCategory = !category || a.categorie === category;
-
     return matchSearch && matchCategory;
   });
-  // limite pagina che mostro
-  const visible = filtered.slice(0, page * PAGE_SIZE);
 
+  const visible = filtered.slice(0, page * PAGE_SIZE);
 
   return (
     <main className="py-4">
       <div className="container">
         <div className="row g-3 align-items-end mb-3">
-          <div className="col-12 col-md-6">
+          <div className="col-12 col-md-4">
             <h1 className="h3 mb-1">Articoli</h1>
-
           </div>
-
-          <div className="col-12 col-md-6 d-flex gap-2 justify-content-md-end">
+          <div className="col-12 col-md-8 d-flex gap-2 justify-content-md-end filters-row">
             <select
               className="form-select"
               value={category}
-              onChange={(e) => {
-                const value = e.target.value;
-                setCategory(value);
-                localStorage.setItem("category", value)
-              }}
-              style={{ maxWidth: 200 }}
+              onChange={(e) => { setCategory(e.target.value); setPage(1); }}
             >
               <option value="">Tutte le categorie</option>
-              {categories.map((cat) => (
+              {categories.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
             <input
               className="form-control"
-              placeholder="Cerca per titolo..."
+              placeholder="Cerca..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{ maxWidth: 320 }}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             />
-
-
           </div>
         </div>
 
@@ -97,7 +70,6 @@ const matchSearch = !search ||
         {error && <div className="alert alert-danger">{error}</div>}
 
         <div className="row g-3">
-
           {!loading && !error && visible.map((a) => {
             const id = a.id ?? a.ID ?? a.article_id;
             const title = a.name ?? a.slug;
@@ -105,18 +77,15 @@ const matchSearch = !search ||
             const price = a.price;
             const image = a.image;
 
-
             return (
-
               <div className="col-12 col-sm-6 col-lg-4 col-xl-3" key={id ?? title}>
                 <div className="card h-100 shadow-sm">
                   <div className="ratio ratio-4x3 bg-body-tertiary">
-                    <img src={image} className="card-img-top img-fluid" alt={title} />
+                    <img src={image} className="w-100 h-100 img-cover" alt={title} />
                   </div>
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{title}</h5>
                     <p className="card-text text-secondary small">{desc}</p>
-
                     <div className="mt-auto d-flex justify-content-between align-items-center">
                       <div className="fw-semibold">{price ? `€ ${price}` : "Prezzo N/D"}</div>
                       {id ? (
@@ -139,7 +108,6 @@ const matchSearch = !search ||
             <button className="btn btn-outline-primary" onClick={() => setPage(page + 1)}>Load more</button>
           </div>
         )}
-
       </div>
     </main>
   );

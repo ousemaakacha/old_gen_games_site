@@ -1,22 +1,40 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
-
+import Cart from "./pages/Cart.jsx";
 
 export default function App() {
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary border-bottom">
-        <div className="container">
-          <Link className="navbar-brand fw-semibold" to="/">Titano Shop</Link>
-        </div>
-      </nav>
-
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/articoli/:id" element={<ProductDetail />} />
-
+        <Route path="/cart" element={<Cart />} />
       </Routes>
+      <button
+        className={`scroll-top-btn ${showScrollTop ? "visible" : ""}`}
+        onClick={scrollToTop}
+        aria-label="Torna su"
+      >
+        ↑
+      </button>
     </div>
   );
 }
