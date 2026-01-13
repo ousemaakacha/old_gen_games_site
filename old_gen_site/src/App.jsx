@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
+import Footer from "./components/Footer.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
 import Cart from "./pages/Cart.jsx";
 
@@ -28,6 +29,7 @@ export default function App() {
         <Route path="/articoli/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
       </Routes>
+      <Footer />
       <button
         className={`scroll-top-btn ${showScrollTop ? "visible" : ""}`}
         onClick={scrollToTop}
