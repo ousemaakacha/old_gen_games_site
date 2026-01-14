@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
 export default function ProductDetail() {
-    const { id } = useParams();
+    const { slug } = useParams();
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -12,7 +12,7 @@ export default function ProductDetail() {
             try {
                 setError("");
                 setLoading(true);
-                const res = await fetch(`/api/articles/${id}`);
+                const res = await fetch(`/api/articles/${slug}`);
                 if (!res.ok) throw new Error("Prodotto non trovato");
                 const data = await res.json();
                 const item = Array.isArray(data) ? data[0] : (data.data || data);
@@ -24,7 +24,7 @@ export default function ProductDetail() {
             }
         }
         loadArticle();
-    }, [id]);
+    }, [slug]);
 
     if (loading) {
         return (

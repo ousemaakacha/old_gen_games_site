@@ -26,7 +26,7 @@ export default function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/articoli/:id" element={<ProductDetail />} />
+        <Route path="/articoli/:slug" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
       </Routes>
       <Footer />

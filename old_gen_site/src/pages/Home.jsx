@@ -80,6 +80,7 @@ export default function Home() {
         <div className="row g-3">
           {!loading && !error && visible.map((a) => {
             const id = a.id ?? a.ID ?? a.article_id;
+            const slug = a.slug;
             const title = a.name ?? a.slug;
             const desc = a.genres;
             const price = a.price;
@@ -96,8 +97,8 @@ export default function Home() {
                     <p className="card-text text-secondary small">{desc}</p>
                     <div className="mt-auto d-flex justify-content-between align-items-center">
                       <div className="fw-semibold">{price ? `€ ${price}` : "Prezzo N/D"}</div>
-                      {id ? (
-                        <Link className="btn btn-sm btn-outline-primary" to={`/articoli/${id}`}>
+                      {slug ? (
+                        <Link className="btn btn-sm btn-outline-primary" to={`/articoli/${slug}`}>
                           DETAILS
                         </Link>
                       ) : (
