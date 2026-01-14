@@ -9,6 +9,9 @@ export default function Home() {
   const [category, setCategory] = useState(() => {
     return localStorage.getItem("category") || "";
   });
+  const [sortBy, setSortBy] = useState(() => {
+    return localStorage.getItem("sortBy") || "";
+  });
   const PAGE_SIZE = 12;
   const [page, setPage] = useState(1);
 
@@ -39,30 +42,63 @@ export default function Home() {
     return matchSearch && matchCategory;
   });
 
-  const visible = filtered.slice(0, page * PAGE_SIZE);
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortBy === "price-asc") {
+      return parseFloat(a.price) - parseFloat(b.price);
+    }
+    if (sortBy === "price-desc") {
+      return parseFloat(b.price) - parseFloat(a.price);
+    }
+    if (sortBy === "name-asc") {
+      return (a.name || "").localeCompare(b.name || "");
+    }
+    if (sortBy === "name-desc") {
+      return (b.name || "").localeCompare(a.name || "");
+    }
+    return 0;
+  });
+
+  const visible = sorted.slice(0, page * PAGE_SIZE);
 
   return (
     <main className="pb-4">
-     <img className="my-img img-fluid" src="jumbo.png" alt="jumbo" />
+      <img className="my-img img-fluid" src="jumbo.png" alt="jumbo" />
       <div className="container">
         <div className="row g-3 align-items-end mb-3">
-          <div className="col-12 col-md-4">
+          <div className="col-12 col-md-3">
             <h1 className="h3 mb-1">Articoli</h1>
           </div>
-          <div className="col-12 col-md-8 d-flex gap-2 justify-content-md-end filters-row">
+          <div className="col-12 col-md-9 d-flex gap-2 justify-content-md-end filters-row">
             <select
               className="form-select"
               value={category}
               onChange={(e) => {
                 const value = e.target.value;
                 setCategory(value);
-                localStorage.setItem("category", value)
+                setPage(1);
+                localStorage.setItem("category", value);
               }}
             >
               <option value="">Tutte le categorie</option>
               {categories.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
+            </select>
+            <select
+              className="form-select"
+              value={sortBy}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSortBy(value);
+                setPage(1);
+                localStorage.setItem("sortBy", value);
+              }}
+            >
+              <option value="">Ordina per...</option>
+              <option value="price-asc">Prezzo crescente</option>
+              <option value="price-desc">Prezzo decrescente</option>
+              <option value="name-asc">Nome A-Z</option>
+              <option value="name-desc">Nome Z-A</option>
             </select>
             <input
               className="form-control"
@@ -73,8 +109,8 @@ export default function Home() {
           </div>
         </div>
         <div className="mt-4">
-        {loading && <div className="alert alert-info">LOADING...</div>}
-        {error && <div className="alert alert-danger">{error}</div>}
+          {loading && <div className="alert alert-info">LOADING...</div>}
+          {error && <div className="alert alert-danger">{error}</div>}
         </div>
 
         <div className="row g-3">
@@ -112,7 +148,7 @@ export default function Home() {
           })}
         </div>
 
-        {visible.length < filtered.length && (
+        {visible.length < sorted.length && (
           <div className="d-flex justify-content-center mt-4">
             <button className="btn btn-outline-primary" onClick={() => setPage(page + 1)}>Load more</button>
           </div>
