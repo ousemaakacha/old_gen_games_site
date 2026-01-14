@@ -72,9 +72,10 @@ export default function Home() {
             />
           </div>
         </div>
-
-        {loading && <div className="alert alert-info">Caricamento...</div>}
+        <div className="mt-4">
+        {loading && <div className="alert alert-info">LOADING...</div>}
         {error && <div className="alert alert-danger">{error}</div>}
+        </div>
 
         <div className="row g-3">
           {!loading && !error && visible.map((a) => {
