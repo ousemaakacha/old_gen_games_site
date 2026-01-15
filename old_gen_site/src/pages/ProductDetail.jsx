@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 export default function ProductDetail() {
     const { slug } = useParams();
+    const navigate = useNavigate();
+    const { addToCart } = useCart();
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [quantity, setQuantity] = useState(1);
+    const [addedToCart, setAddedToCart] = useState(false);
 
     useEffect(() => {
         async function loadArticle() {
@@ -133,9 +138,46 @@ export default function ProductDetail() {
                                         <span className="detail-price-label">Prezzo</span>
                                         <span className="detail-price">{article.price ? `€ ${article.price}` : "N/D"}</span>
                                     </div>
-                                    <button className="btn btn-primary btn-lg w-100" disabled={article.quantity <= 0}>
-                                        <i className="bi bi-cart-plus"></i> Aggiungi al carrello
-                                    </button>
+
+                                    <div className="d-flex gap-2 align-items-center mb-3">
+                                        <label className="form-label mb-0">Quantità:</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            style={{ maxWidth: "100px" }}
+                                            min="1"
+                                            max={article.quantity}
+                                            value={quantity}
+                                            onChange={(e) => setQuantity(Math.max(1, Math.min(article.quantity, parseInt(e.target.value) || 1)))}
+                                            disabled={article.quantity <= 0}
+                                        />
+                                    </div>
+
+                                    {addedToCart && (
+                                        <div className="alert alert-success py-2 mb-2">
+                                            Articolo aggiunto al carrello!
+                                        </div>
+                                    )}
+
+                                    <div className="d-flex gap-2">
+                                        <button
+                                            className="btn btn-primary btn-lg flex-grow-1"
+                                            disabled={article.quantity <= 0}
+                                            onClick={() => {
+                                                addToCart(article, quantity);
+                                                setAddedToCart(true);
+                                                setTimeout(() => setAddedToCart(false), 3000);
+                                            }}
+                                        >
+                                            <i className="bi bi-cart-plus"></i> Aggiungi al carrello
+                                        </button>
+                                        <button
+                                            className="btn btn-outline-primary btn-lg"
+                                            onClick={() => navigate("/cart")}
+                                        >
+                                            <i className="bi bi-cart"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
