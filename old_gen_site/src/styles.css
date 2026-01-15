@@ -15,6 +15,7 @@
 
 * {
     box-sizing: border-box;
+    font-family: 'Press Start 2P', cursive;
 }
 
 body {
@@ -154,6 +155,41 @@ main {
     gap: 0.5rem;
 }
 
+.text-center {
+    text-align: center;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.position-absolute {
+    position: absolute;
+}
+
+.top-0 {
+    top: 0;
+}
+
+.start-100 {
+    left: 100%;
+}
+
+.translate-middle {
+    transform: translate(-50%, -50%);
+}
+
+.rounded-pill {
+    border-radius: 50rem;
+}
+
+.bg-danger {
+    background-color: #c0392b;
+    color: white;
+    font-size: 0.45rem;
+    padding: 0.25rem 0.5rem;
+}
+
 .h-100 {
     height: 100%;
 }
@@ -254,11 +290,19 @@ main {
     color: var(--accent-orange);
 }
 
+.navbar-icons {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
 .cart-icon {
     color: var(--accent-amber);
     font-size: 1.8rem;
     transition: color 0.2s;
     text-decoration: none;
+    display: inline-flex;
+    align-items: center;
 }
 
 .cart-icon:hover {
@@ -267,10 +311,11 @@ main {
 
 .wish-icon {
     color: var(--accent-amber);
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     transition: color 0.2s;
     text-decoration: none;
-    padding-right: 10px;
+    display: inline-flex;
+    align-items: center;
 }
 
 .wish-icon:hover {
@@ -346,8 +391,23 @@ main h1.h3,
     color: var(--brown-dark);
 }
 
+.btn-outline-danger {
+    background: transparent;
+    border: 2px solid #c0392b;
+    color: #c0392b;
+}
+
+.btn-outline-danger:hover {
+    background: #c0392b;
+    color: white;
+}
+
 .btn i {
     margin-right: 0.5rem;
+}
+
+.btn-lg i {
+    font-size: 1.1rem;
 }
 
 .btn:disabled {
@@ -568,8 +628,8 @@ main h1.h3,
 }
 
 .detail-genres {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.5rem;
     color: var(--brown-light);
     margin: 0;
     text-transform: capitalize;
@@ -612,16 +672,16 @@ main h1.h3,
 }
 
 .detail-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.7rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.45rem;
     color: var(--brown-light);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .detail-value {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.5rem;
     color: var(--brown-dark);
     font-weight: 500;
 }
@@ -645,9 +705,24 @@ main h1.h3,
     margin-bottom: 1rem;
 }
 
+.detail-qty-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.detail-qty-wrapper .stock-warning {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem;
+}
+
 .detail-price-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.75rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.45rem;
     color: var(--brown-light);
     text-transform: uppercase;
 }
@@ -662,6 +737,47 @@ main h1.h3,
     .detail-info-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.detail-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.btn-wish {
+    padding: 0.65rem 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-wish i {
+    font-size: 0.9rem;
+    color: var(--brown-light);
+    transition: color 0.2s;
+}
+
+.btn-wish:hover {
+    border-color: var(--accent-amber);
+}
+
+.btn-wish:hover i {
+    color: #c0392b;
+}
+
+.btn-wish.active {
+    border-color: #c0392b;
+    background: #fdf2f2;
+}
+
+.btn-wish.active i {
+    color: #c0392b;
 }
 
 /* Related products */
@@ -867,13 +983,21 @@ main h1.h3,
 
 .wish-page {
     padding: 3rem 0;
-    min-height: 80vh;
+    min-height: calc(100vh - 200px);
+}
+
+.wish-page h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    color: var(--brown-dark);
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
 .wish-layout {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .wish-col {
@@ -882,24 +1006,169 @@ main h1.h3,
 
 .wish-card {
     display: flex;
+    align-items: center;
     background-color: var(--bg-card);
     border: 2px solid var(--border-color);
     border-radius: 10px;
-    overflow: hidden;
-    padding: 10px;
+    padding: 1.5rem;
     width: 100%;
-    gap: 10rem;
+    gap: 1.5rem;
+    transition: border-color 0.2s;
+}
+
+.wish-card:hover {
+    border-color: var(--accent-amber);
+}
+
+.wish-card-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    background: var(--bg-primary);
+    border-radius: 8px;
+    padding: 0.5rem;
+    flex-shrink: 0;
 }
 
 .wish-card-body {
-    margin-left: 20px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.wish-card-body h5 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.6rem;
+    color: var(--brown-dark);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.wish-card-info {
+    flex: 1;
+}
+
+.wish-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.wish-card-price {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.65rem;
+    color: var(--accent-orange);
+}
+
+.wish-card-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.wish-card-actions .btn {
+    height: 42px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wish-card-actions .btn:not(:first-child) {
+    width: 42px;
+}
+
+.wish-card-actions .btn:first-child {
+    padding: 0 1rem;
+}
+
+.wish-card-actions .btn i {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+
+.wish-btn-wrapper {
+    position: relative;
+}
+
+.wish-btn-wrapper .stock-warning {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.5rem;
+}
+
+.btn-wish-action {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--accent-amber);
+    border-radius: 6px;
+    background: var(--accent-amber);
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0;
+}
+
+.btn-wish-action i {
+    font-size: 1rem;
+    color: var(--brown-dark);
+}
+
+.btn-wish-action:hover {
+    background: var(--accent-orange);
+    border-color: var(--accent-orange);
+}
+
+.btn-wish-danger {
+    background: #c0392b;
+    border-color: #c0392b;
+}
+
+.btn-wish-danger i {
+    color: white;
+}
+
+.btn-wish-danger:hover {
+    background: #a93226;
+    border-color: #a93226;
+}
+
+.wish-page .cart-actions {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border-color);
+}
+
+
+@media (max-width: 768px) {
+    .wish-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .wish-card-body {
+        flex-direction: column;
+    }
+
+    .wish-card-img {
+        width: 100px;
+        height: 100px;
+    }
 }
 
 /* Cart page */
 
 .cart-page {
     padding: 3rem 0;
-    min-height: 80vh;
+    min-height: calc(100vh - 200px);
 }
 
 .cart-title {
@@ -984,8 +1253,8 @@ main h1.h3,
 }
 
 .cart-item-info p {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.85rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.5rem;
     color: var(--brown-light);
     margin: 0;
 }
@@ -1023,6 +1292,36 @@ main h1.h3,
 .cart-item-qty:focus {
     border-color: var(--accent-amber);
     outline: none;
+}
+
+.cart-item-qty-wrapper {
+    position: relative;
+}
+
+.stock-warning {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.5rem;
+    background: #c0392b;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.45rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    z-index: 10;
+    animation: fadeIn 0.3s ease;
+}
+
+.stock-warning i {
+    margin-right: 0.3rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-5px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 @media (max-width: 768px) {
@@ -1074,6 +1373,69 @@ main h1.h3,
     display: flex;
     gap: 1rem;
     margin-top: 1rem;
+}
+
+/* Order Success */
+
+.order-success {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.order-success-icon {
+    font-size: 5rem;
+    color: #27ae60;
+    margin-bottom: 1.5rem;
+}
+
+.order-success h1 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2rem;
+    color: var(--brown-dark);
+    margin-bottom: 1rem;
+}
+
+.order-success p {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.55rem;
+    color: var(--brown-light);
+    margin-bottom: 1rem;
+}
+
+.order-success-id {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.65rem;
+    color: var(--brown-medium);
+    margin-bottom: 1rem;
+}
+
+.order-success-id span {
+    color: var(--accent-amber);
+    font-size: 0.75rem;
+}
+
+.order-success-total {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    color: var(--brown-dark);
+    background: var(--bg-card);
+    border: 2px solid var(--accent-amber);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+
+.order-success-total span {
+    color: var(--accent-orange);
+    font-size: 1rem;
+}
+
+.order-success-redirect {
+    font-size: 0.85rem;
+    color: var(--brown-light);
+    margin-bottom: 1.5rem;
 }
 
 /* Cart Summary */
@@ -1134,8 +1496,8 @@ main h1.h3,
 
 .checkout-form input,
 .checkout-form textarea {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.95rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.55rem;
     padding: 1rem;
     border: 2px solid var(--border-color);
     border-radius: 8px;
@@ -1156,7 +1518,7 @@ main h1.h3,
 .checkout-form textarea {
     resize: vertical;
     min-height: 90px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Press Start 2P', cursive;
 }
 
 .checkout-form button {
@@ -1262,7 +1624,8 @@ main h1.h3,
 .carousel {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    justify-content: center;
+    gap: 1.5rem;
 }
 
 .carousel-grid {
@@ -1336,13 +1699,15 @@ main h1.h3,
 }
 
 .carousel-btn {
-    background: var(--accent-amber);
+    background: transparent;
     border: none;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    font-size: 1.5rem;
-    color: var(--brown-dark);
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--brown-light);
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -1352,8 +1717,8 @@ main h1.h3,
 }
 
 .carousel-btn:hover {
-    background: var(--accent-orange);
-    transform: scale(1.1);
+    color: var(--accent-orange);
+    transform: scale(1.2);
 }
 
 .carousel-dots {

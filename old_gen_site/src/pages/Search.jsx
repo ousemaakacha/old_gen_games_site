@@ -6,6 +6,7 @@ export default function Search() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [category, setCategory] = useState(() => {
     return localStorage.getItem("category") || "";
   });
@@ -14,6 +15,14 @@ export default function Search() {
   });
   const PAGE_SIZE = 12;
   const [page, setPage] = useState(1);
+
+  // Debounce per la ricerca - aspetta 500ms dopo l'ultimo carattere
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   useEffect(() => {
     async function loadArticles() {
@@ -24,7 +33,7 @@ export default function Search() {
         // Costruisco i query params per il backend
         const params = new URLSearchParams();
         if (category) params.append("categorie", category);
-        if (search) params.append("name", search);
+        if (debouncedSearch) params.append("name", debouncedSearch);
 
         const url = `/api/articles${params.toString() ? `?${params.toString()}` : ""}`;
         const res = await fetch(url);
@@ -39,12 +48,12 @@ export default function Search() {
       }
     }
     loadArticles();
-  }, [category, search]);
+  }, [category, debouncedSearch]);
 
   // Categorie valide dal backend
   const categories = ["Videogames", "Consoles", "Collectibles", "Accessories"];
 
-  // Il filtro ora è gestito dal backend, qui rimane solo l'ordinamento
+  // Ordinamento
   const sorted = [...articles].sort((a, b) => {
     if (sortBy === "price-asc") {
       return parseFloat(a.price) - parseFloat(b.price);

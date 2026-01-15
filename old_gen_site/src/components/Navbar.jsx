@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useWish } from "../context/WishContext";
 
 export default function Navbar() {
     const { getTotalItems } = useCart();
+    const { wishlist } = useWish();
     const itemCount = getTotalItems();
+    const wishCount = wishlist.length;
 
     return (
         <nav className="navbar">
@@ -22,12 +25,17 @@ export default function Navbar() {
                     <Link className="navbar-brand" to="/">METAL GAMES SOLID SHOP</Link>
 
                 </div>
-                <div>
+                <div className="navbar-icons">
                     <Link className="wish-icon position-relative" to={"/wish"}>
                         <i className="bi bi-heart"></i>
+                        {wishCount > 0 && (
+                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {wishCount}
+                            </span>
+                        )}
                     </Link>
                     <Link className="cart-icon position-relative" to="/cart">
-                        <i className="bi bi-cart3"></i>
+                        <i className="bi bi-cart-plus"></i>
                         {itemCount > 0 && (
                             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                 {itemCount}

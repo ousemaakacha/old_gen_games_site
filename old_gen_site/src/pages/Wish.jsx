@@ -1,22 +1,26 @@
+import { useState } from "react"
 import { useWish } from "../context/WishContext"
 import { useCart } from "../context/CartContext"
 import { Link } from "react-router-dom"
 
 export default function Wish() {
 
-    const { wishlist, removeFromWish, clearWish } = useWish()
-    const { addToCart } = useCart()
+    const { wishlist, removeFromWish } = useWish()
+    const { addToCart, getCartQuantity } = useCart()
+    const [stockWarning, setStockWarning] = useState(null)
 
     if (wishlist.length === 0) {
         return (
-            <div className="container">
-                <h2>
-                    La tua Wishlist è vuota
-                </h2>
-                <Link to="/" className="btn btn-primary">
-                    Torna ai prodotti
-                </Link>
-            </div>
+            <main className="wish-page">
+                <div className="container">
+                    <h2>La tua Wishlist è vuota</h2>
+                    <div className="text-center">
+                        <Link to="/search" className="btn btn-primary">
+                            Torna ai prodotti
+                        </Link>
+                    </div>
+                </div>
+            </main>
         )
     }
 
@@ -32,22 +36,43 @@ export default function Wish() {
                                     <img src={item.image} className="wish-card-img" />
                                 )}
                                 <div className="wish-card-body">
-                                    <h5>{item.name}</h5>
-                                    <div className="d-flex gap-2">
+                                    <div className="wish-card-info">
+                                        <h5>{item.name}</h5>
+                                        <div className="wish-card-meta">
+                                            {item.categorie && <span className="badge bg-dark">{item.categorie}</span>}
+                                            <span className="wish-card-price">{item.price ? `€ ${item.price}` : "N/D"}</span>
+                                        </div>
+                                    </div>
+                                    <div className="wish-card-actions">
                                         <Link
-                                            to={`/articoli/${item.slug}`}
+                                            to={`/product/${item.slug}`}
                                             className="btn btn-primary">
                                             Dettagli
                                         </Link>
-                                        <button className="btn btn-primary"
-                                            onClick={() => {
-                                                addToCart(item, 1)
-                                                removeFromWish(item.id)
-                                            }}>
-
-                                        </button>
+                                        <div className="wish-btn-wrapper">
+                                            <button type="button" className="btn btn-primary"
+                                                onClick={() => {
+                                                    const currentInCart = getCartQuantity(item.id)
+                                                    const result = addToCart(item, 1)
+                                                    if (!result.success) {
+                                                        setStockWarning({ itemId: item.id, max: result.max, inCart: currentInCart })
+                                                        setTimeout(() => setStockWarning(null), 3000)
+                                                        if (result.added === 0) {
+                                                            return
+                                                        }
+                                                    }
+                                                    removeFromWish(item.id)
+                                                }}>
+                                                <i className="bi bi-cart-plus"></i>
+                                            </button>
+                                            {stockWarning && stockWarning.itemId === item.id && (
+                                                <div className="stock-warning">
+                                                    <i className="bi bi-exclamation-triangle"></i> Scorte esaurite! Max: {stockWarning.max} ({stockWarning.inCart} nel carrello)
+                                                </div>
+                                            )}
+                                        </div>
                                         <button
-                                            className="btn btn-danger"
+                                            className="btn btn-outline-danger"
                                             onClick={() => removeFromWish(item.id)}>
                                             <i className="bi bi-trash"></i>
                                         </button>
@@ -60,10 +85,24 @@ export default function Wish() {
                 <div className="cart-actions">
                     <button className="btn btn-primary"
                         onClick={() => {
-                            wishlist.forEach((item) => addToCart(item, 1))
-                            clearWish()
+                            const failedItems = []
+                            const addedItems = []
+                            wishlist.forEach((item) => {
+                                const result = addToCart(item, 1)
+                                if (result.added > 0) {
+                                    addedItems.push(item.id)
+                                }
+                                if (!result.success && result.added === 0) {
+                                    failedItems.push(item.name)
+                                }
+                            })
+                            if (failedItems.length > 0) {
+                                alert(`Scorte esaurite per: ${failedItems.join(", ")}`)
+                            }
+                            // Rimuovi solo i prodotti effettivamente aggiunti
+                            addedItems.forEach((id) => removeFromWish(id))
                         }}>
-                        <i></i>Aggiungi tutto al carrello
+                        Aggiungi tutto al carrello
                     </button>
 
                     <Link to="/search" className="btn btn-outline-secondary">

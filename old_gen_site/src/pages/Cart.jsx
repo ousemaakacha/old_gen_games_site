@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
 export default function Cart() {
-    const navigate = useNavigate();
     const { cart, removeFromCart, updateQuantity, clearCart, getTotalPrice } = useCart();
     const [showForm, setShowForm] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [orderSuccess, setOrderSuccess] = useState(null);
     const [form, setForm] = useState({
         name: "",
         surname: "",
@@ -17,6 +17,17 @@ export default function Cart() {
         citta: "",
         cap: ""
     });
+    const [stockWarning, setStockWarning] = useState(null);
+
+    const handleQuantityChange = (articleId, newQuantity, maxQuantity) => {
+        if (newQuantity > maxQuantity) {
+            setStockWarning({ articleId, maxQuantity });
+            updateQuantity(articleId, maxQuantity);
+            setTimeout(() => setStockWarning(null), 3000);
+        } else {
+            updateQuantity(articleId, newQuantity);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -66,17 +77,12 @@ export default function Cart() {
             console.log("Response data:", data);
 
             const totale = getTotalPrice().toFixed(2);
+            // Estrai l'ID ordine dalla risposta (può essere in diversi formati)
+            const orderId = data?.order_id || data?.orderId || data?.id || data?.data?.id || null;
             clearCart();
 
-            // Gestisce vari tipi di risposta dal backend
-            if (data === true || data === "true" || data.success || text === "true") {
-                alert(`Ordine completato con successo! Totale: €${totale}`);
-            } else if (data.order_id) {
-                alert(`Ordine #${data.order_id} completato! Totale: €${data.total || totale}`);
-            } else {
-                alert(`Ordine completato! Totale: €${totale}`);
-            }
-            navigate("/");
+            // Mostra messaggio di successo stilizzato con numero ordine
+            setOrderSuccess({ totale, orderId });
         } catch (err) {
             console.error("Errore checkout:", err);
             setError(err.message);
@@ -85,13 +91,41 @@ export default function Cart() {
         }
     };
 
+    // Mostra pagina di successo ordine
+    if (orderSuccess) {
+        return (
+            <main className="cart-page">
+                <div className="container">
+                    <div className="order-success">
+                        <div className="order-success-icon">
+                            <i className="bi bi-check-circle-fill"></i>
+                        </div>
+                        <h1>Ordine completato!</h1>
+                        <p>Grazie per il tuo acquisto</p>
+                        {orderSuccess.orderId && (
+                            <div className="order-success-id">
+                                Ordine N. <span>#{orderSuccess.orderId}</span>
+                            </div>
+                        )}
+                        <div className="order-success-total">
+                            Totale: <span>€ {orderSuccess.totale}</span>
+                        </div>
+                        <Link to="/" className="btn btn-primary">Torna alla Home</Link>
+                    </div>
+                </div>
+            </main>
+        );
+    }
+
     if (cart.length === 0) {
         return (
-            <main className="py-4">
+            <main className="cart-page">
                 <div className="container">
-                    <h1 className="h3 mb-4">Carrello</h1>
-                    <div className="alert alert-info">Carrello vuoto</div>
-                    <Link to="/search" className="btn btn-primary">Vai allo shop</Link>
+                    <h1 className="cart-title">Carrello</h1>
+                    <div className="alert alert-info text-center">Il tuo carrello è vuoto</div>
+                    <div className="text-center">
+                        <Link to="/search" className="btn btn-primary">Vai allo shop</Link>
+                    </div>
                 </div>
             </main>
         );
@@ -110,16 +144,25 @@ export default function Cart() {
                                 <div className="cart-item-info">
                                     <h3>{item.article.name}</h3>
                                     <p>{item.article.genres}</p>
+                                    <Link to={`/articoli/${item.article.slug || item.article.id}`} className="btn btn-sm btn-outline-secondary">
+                                        Dettagli
+                                    </Link>
                                 </div>
                                 <div className="cart-item-price">€ {item.article.price}</div>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    max={item.article.quantity}
-                                    value={item.quantity}
-                                    onChange={(e) => updateQuantity(item.article.id, parseInt(e.target.value) || 1)}
-                                    className="cart-item-qty"
-                                />
+                                <div className="cart-item-qty-wrapper">
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={item.quantity}
+                                        onChange={(e) => handleQuantityChange(item.article.id, parseInt(e.target.value) || 1, item.article.quantity)}
+                                        className="cart-item-qty"
+                                    />
+                                    {stockWarning && stockWarning.articleId === item.article.id && (
+                                        <div className="stock-warning">
+                                            <i className="bi bi-exclamation-triangle"></i> Scorte esaurite! Max: {stockWarning.maxQuantity}
+                                        </div>
+                                    )}
+                                </div>
                                 <div className="cart-item-total">€ {(item.article.price * item.quantity).toFixed(2)}</div>
                                 <button onClick={() => removeFromCart(item.article.id)} className="cart-item-remove">✕</button>
                             </div>

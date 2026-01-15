@@ -5,7 +5,7 @@ import { useWish } from "../context/WishContext";
 
 export default function ProductDetail() {
     const { slug } = useParams();
-    const { addToCart } = useCart();
+    const { addToCart, getCartQuantity } = useCart();
     const { addToWish, removeFromWish, isInWish } = useWish()
     const [article, setArticle] = useState(null);
     const [relatedProducts, setRelatedProducts] = useState([]);
@@ -13,6 +13,7 @@ export default function ProductDetail() {
     const [error, setError] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [addedToCart, setAddedToCart] = useState(false);
+    const [stockWarning, setStockWarning] = useState(false);
 
     useEffect(() => {
         async function loadArticle() {
@@ -157,18 +158,31 @@ export default function ProductDetail() {
                                         <span className="detail-price">{article.price ? `€ ${article.price}` : "N/D"}</span>
                                     </div>
 
-                                    <div className="d-flex gap-2 align-items-center mb-3">
+                                    <div className="detail-qty-wrapper">
                                         <label className="form-label mb-0">Quantità:</label>
                                         <input
                                             type="number"
                                             className="form-control"
                                             style={{ maxWidth: "100px" }}
                                             min="1"
-                                            max={article.quantity}
                                             value={quantity}
-                                            onChange={(e) => setQuantity(Math.max(1, Math.min(article.quantity, parseInt(e.target.value) || 1)))}
+                                            onChange={(e) => {
+                                                const newQty = parseInt(e.target.value) || 1;
+                                                if (newQty > article.quantity) {
+                                                    setStockWarning(true);
+                                                    setQuantity(article.quantity);
+                                                    setTimeout(() => setStockWarning(false), 3000);
+                                                } else {
+                                                    setQuantity(Math.max(1, newQty));
+                                                }
+                                            }}
                                             disabled={article.quantity <= 0}
                                         />
+                                        {stockWarning && (
+                                            <div className="stock-warning">
+                                                <i className="bi bi-exclamation-triangle"></i> Scorte esaurite! Max: {article.quantity} {getCartQuantity(article.id) > 0 && `(${getCartQuantity(article.id)} nel carrello)`}
+                                            </div>
+                                        )}
                                     </div>
 
                                     {addedToCart && (
@@ -177,23 +191,27 @@ export default function ProductDetail() {
                                         </div>
                                     )}
 
-                                    <div>
+                                    <div className="detail-buttons">
                                         <button
                                             className="btn btn-primary btn-lg"
                                             disabled={article.quantity <= 0}
                                             onClick={() => {
-                                                addToCart(article, quantity);
+                                                const result = addToCart(article, quantity);
+                                                if (!result.success) {
+                                                    setStockWarning(true);
+                                                    setTimeout(() => setStockWarning(false), 3000);
+                                                    if (result.added === 0) {
+                                                        return;
+                                                    }
+                                                }
                                                 setAddedToCart(true);
                                                 setTimeout(() => setAddedToCart(false), 3000);
                                             }}
                                         >
-                                            <i className="bi bi-cart-plus"></i> Aggiungi al carrello
+                                            Aggiungi al carrello
                                         </button>
                                         <button
-                                            className={`btn btn-lg ${isInWish(article.id)
-                                                ? "btn-danger"
-                                                : "btn-outline-primary"
-                                                }`}
+                                            className={`btn-wish ${isInWish(article.id) ? "active" : ""}`}
                                             onClick={() => {
                                                 isInWish(article.id)
                                                     ? removeFromWish(article.id)

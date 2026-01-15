@@ -16,7 +16,35 @@ export function CartProvider({ children }) {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  const getCartQuantity = (articleId) => {
+    const item = cart.find((item) => item.article.id === articleId);
+    return item ? item.quantity : 0;
+  };
+
   const addToCart = (article, quantity = 1) => {
+    const currentInCart = getCartQuantity(article.id);
+    const maxAvailable = article.quantity || 0;
+    const newTotal = currentInCart + quantity;
+
+    if (newTotal > maxAvailable) {
+      const canAdd = maxAvailable - currentInCart;
+      if (canAdd <= 0) {
+        return { success: false, added: 0, max: maxAvailable };
+      }
+      setCart((prev) => {
+        const existing = prev.find((item) => item.article.id === article.id);
+        if (existing) {
+          return prev.map((item) =>
+            item.article.id === article.id
+              ? { ...item, quantity: maxAvailable }
+              : item
+          );
+        }
+        return [...prev, { article, quantity: canAdd }];
+      });
+      return { success: false, added: canAdd, max: maxAvailable };
+    }
+
     setCart((prev) => {
       const existing = prev.find((item) => item.article.id === article.id);
       if (existing) {
@@ -28,6 +56,7 @@ export function CartProvider({ children }) {
       }
       return [...prev, { article, quantity }];
     });
+    return { success: true, added: quantity, max: maxAvailable };
   };
 
   const removeFromCart = (articleId) => {
@@ -53,7 +82,7 @@ export function CartProvider({ children }) {
   const getTotalPrice = () => cart.reduce((sum, item) => sum + parseFloat(item.article.price || 0) * item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, getTotalItems, getTotalPrice }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, getTotalItems, getTotalPrice, getCartQuantity }}>
       {children}
     </CartContext.Provider>
   );
