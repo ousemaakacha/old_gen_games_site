@@ -7,6 +7,8 @@ import Search from "./pages/Search.jsx";
 import Footer from "./components/Footer.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
 import Cart from "./pages/Cart.jsx";
+import WelcomeModal from "./components/WelcomeModal";
+
 
 export default function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -27,6 +29,7 @@ export default function App() {
     <CartProvider>
       <div className="app-wrapper">
         <Navbar />
+        <WelcomeModal />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />

@@ -75,4 +75,3 @@ export default function Home() {
   );
 }
 
-"Consoles", "Collectibles"
