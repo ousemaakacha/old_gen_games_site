@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
 export default function ProductDetail() {
     const { slug } = useParams();
-    const navigate = useNavigate();
     const { addToCart } = useCart();
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -159,9 +158,9 @@ export default function ProductDetail() {
                                         </div>
                                     )}
 
-                                    <div className="d-flex gap-2">
+                                    <div>
                                         <button
-                                            className="btn btn-primary btn-lg flex-grow-1"
+                                            className="btn btn-primary btn-lg w-100"
                                             disabled={article.quantity <= 0}
                                             onClick={() => {
                                                 addToCart(article, quantity);
@@ -170,12 +169,6 @@ export default function ProductDetail() {
                                             }}
                                         >
                                             <i className="bi bi-cart-plus"></i> Aggiungi al carrello
-                                        </button>
-                                        <button
-                                            className="btn btn-outline-primary btn-lg"
-                                            onClick={() => navigate("/cart")}
-                                        >
-                                            <i className="bi bi-cart"></i>
                                         </button>
                                     </div>
                                 </div>

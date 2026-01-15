@@ -980,15 +980,40 @@ main h1.h3,
     text-decoration: none;
     font-size: 1.5rem;
     color: var(--brown-dark);
+    transition: color 0.3s;
 }
 
 .home-img {
-    border: 2px, solid, var(--accent-amber);
+    border: 2px solid var(--accent-amber);
     border-radius: 16px;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .games {
     margin: 5rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.games:hover {
+    transform: translateY(-5px);
+}
+
+.games:hover .home-link {
+    color: var(--accent-orange);
+}
+
+.games:hover .home-img {
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px rgba(61, 50, 41, 0.2);
+}
+
+.games .text-right p {
+    transition: color 0.3s;
+}
+
+.games:hover .text-right p {
+    color: var(--brown-medium);
 }
 
 .left-img {
@@ -1008,4 +1033,327 @@ main h1.h3,
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+
+
+.carousel-section {
+    margin: 4rem 0;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-medium) 100%);
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a574' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+.carousel-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.1rem;
+    color: var(--accent-amber);
+    text-align: center;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.carousel-title::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 3px;
+    background: var(--accent-amber);
+    margin: 1rem auto 0;
+    border-radius: 2px;
+}
+
+.carousel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+.carousel-track {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 420px;
+    overflow: visible;
+}
+
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    opacity: 0;
+    transform: translateX(-50%) scale(0.85);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    background: var(--bg-card);
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.carousel-slide:hover {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    transform: translateX(-50%) scale(1.03);
+}
+
+.carousel-image {
+    flex: 1;
+    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-card) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow: hidden;
+    min-height: 260px;
+    position: relative;
+}
+
+.carousel-image::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(transparent, var(--bg-card));
+    pointer-events: none;
+}
+
+.carousel-image img {
+    max-width: 90%;
+    max-height: 220px;
+    object-fit: contain;
+    transition: transform 0.4s ease;
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.15));
+}
+
+.carousel-slide:hover .carousel-image img {
+    transform: scale(1.1) translateY(-5px);
+}
+
+.carousel-info {
+    padding: 1.5rem 2rem 2rem;
+    text-align: center;
+    background: var(--bg-card);
+    position: relative;
+}
+
+.carousel-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--accent-amber);
+    border-radius: 2px;
+}
+
+.carousel-info h3 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.65rem;
+    color: var(--brown-dark);
+    margin: 0.5rem 0 1rem 0;
+    line-height: 1.8;
+    min-height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-price {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.1rem;
+    color: var(--accent-orange);
+    margin: 0;
+    padding: 0.5rem 1.5rem;
+    background: linear-gradient(135deg, rgba(212, 165, 116, 0.15) 0%, rgba(232, 151, 107, 0.15) 100%);
+    border-radius: 30px;
+    display: inline-block;
+}
+
+.carousel-btn {
+    background: var(--accent-amber);
+    border: none;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    font-size: 1.8rem;
+    color: var(--brown-dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 5px 20px rgba(212, 165, 116, 0.4);
+    font-weight: bold;
+}
+
+.carousel-btn:hover {
+    background: var(--accent-orange);
+    transform: scale(1.15);
+    box-shadow: 0 8px 30px rgba(232, 151, 107, 0.5);
+}
+
+.carousel-btn:active {
+    transform: scale(1.05);
+}
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(212, 165, 116, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.carousel-dot:hover {
+    background: rgba(212, 165, 116, 0.6);
+    transform: scale(1.3);
+}
+
+.carousel-dot.active {
+    background: var(--accent-amber);
+    transform: scale(1.3);
+    box-shadow: 0 0 15px rgba(212, 165, 116, 0.6);
+}
+
+@media (max-width: 992px) {
+    .carousel-section {
+        margin: 3rem 0;
+        padding: 3rem 1.5rem;
+        border-radius: 0;
+    }
+
+    .carousel-track {
+        max-width: 450px;
+        height: 380px;
+    }
+
+    .carousel-slide {
+        max-width: 400px;
+    }
+
+    .carousel-image {
+        min-height: 220px;
+    }
+
+    .carousel-image img {
+        max-height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-section {
+        margin: 2rem 0;
+        padding: 2.5rem 1rem;
+    }
+
+    .carousel-title {
+        font-size: 0.85rem;
+        margin-bottom: 2rem;
+        letter-spacing: 1px;
+    }
+
+    .carousel {
+        gap: 0.5rem;
+    }
+
+    .carousel-track {
+        max-width: 100%;
+        height: 350px;
+    }
+
+    .carousel-slide {
+        max-width: 280px;
+    }
+
+    .carousel-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 1.4rem;
+    }
+
+    .carousel-image {
+        min-height: 180px;
+        padding: 1.5rem;
+    }
+
+    .carousel-image img {
+        max-height: 150px;
+    }
+
+    .carousel-info {
+        padding: 1rem 1.5rem 1.5rem;
+    }
+
+    .carousel-info h3 {
+        font-size: 0.5rem;
+        min-height: 2rem;
+    }
+
+    .carousel-price {
+        font-size: 0.85rem;
+        padding: 0.4rem 1rem;
+    }
+
+    .carousel-dots {
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .carousel-dot {
+        width: 10px;
+        height: 10px;
+    }
 }
