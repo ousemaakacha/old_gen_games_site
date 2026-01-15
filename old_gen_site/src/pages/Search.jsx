@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 export default function Search() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(searchParams.get("q") || "");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [category, setCategory] = useState(() => {
     return localStorage.getItem("category") || "";
@@ -116,6 +117,14 @@ export default function Search() {
               placeholder="Cerca per nome..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const params = new URLSearchParams();
+                  if (search.trim()) params.set("q", search.trim());
+                  if (category) params.set("categoria", category);
+                  setSearchParams(params);
+                }
+              }}
             />
           </div>
         </div>
