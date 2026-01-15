@@ -8,6 +8,7 @@ export default function ProductDetail() {
     const { addToCart } = useCart();
     const { addToWish, removeFromWish, isInWish } = useWish()
     const [article, setArticle] = useState(null);
+    const [relatedProducts, setRelatedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [quantity, setQuantity] = useState(1);
@@ -23,6 +24,19 @@ export default function ProductDetail() {
                 const data = await res.json();
                 const item = Array.isArray(data) ? data[0] : (data.data || data);
                 setArticle(item);
+
+                // Carica prodotti correlati della stessa categoria
+                if (item && item.categorie) {
+                    const relatedRes = await fetch(`/api/articles?categorie=${encodeURIComponent(item.categorie)}`);
+                    if (relatedRes.ok) {
+                        const relatedData = await relatedRes.json();
+                        const allRelated = Array.isArray(relatedData) ? relatedData : (relatedData.data || []);
+                        const filtered = allRelated
+                            .filter(p => p.slug !== slug)
+                            .slice(0, 4);
+                        setRelatedProducts(filtered);
+                    }
+                }
             } catch (e) {
                 setError(e.message);
             } finally {
@@ -67,7 +81,10 @@ export default function ProductDetail() {
     return (
         <main className="py-4">
             <div className="container">
-                <Link to="/search" className="btn btn-outline-secondary mb-4">← Tutti i prodotti</Link>
+                <div className="d-flex gap-2 mb-4">
+                    <Link to="/" className="btn btn-outline-secondary">Home</Link>
+                    <Link to="/search" className="btn btn-outline-secondary">← Tutti i prodotti</Link>
+                </div>
                 <div className="detail-card">
                     <div className="row g-0">
                         <div className="col-12 col-md-5">
@@ -190,6 +207,36 @@ export default function ProductDetail() {
                         </div>
                     </div>
                 </div>
+
+                {/* Prodotti correlati */}
+                {relatedProducts.length > 0 && (
+                    <div className="related-products">
+                        <h3 className="related-title">Prodotti correlati</h3>
+                        <div className="related-grid">
+                            {relatedProducts.map((product) => (
+                                <Link
+                                    key={product.id || product.slug}
+                                    to={`/product/${product.slug}`}
+                                    className="related-card"
+                                >
+                                    <div className="related-card-image">
+                                        {product.image ? (
+                                            <img src={product.image} alt={product.name} />
+                                        ) : (
+                                            <span className="related-no-image">Nessuna immagine</span>
+                                        )}
+                                    </div>
+                                    <div className="related-card-info">
+                                        <h4>{product.name}</h4>
+                                        <span className="related-card-price">
+                                            {product.price ? `€ ${product.price}` : "N/D"}
+                                        </span>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </main>
     );

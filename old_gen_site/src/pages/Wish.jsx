@@ -1,8 +1,11 @@
 import { useWish } from "../context/WishContext"
+import { useCart } from "../context/CartContext"
 import { Link } from "react-router-dom"
 
 export default function Wish() {
-    const { wishlist, removeFromWish } = useWish()
+
+    const { wishlist, removeFromWish, clearWish } = useWish()
+    const { addToCart } = useCart()
 
     if (wishlist.length === 0) {
         return (
@@ -36,6 +39,13 @@ export default function Wish() {
                                             className="btn btn-primary">
                                             Dettagli
                                         </Link>
+                                        <button className="btn btn-primary"
+                                            onClick={() => {
+                                                addToCart(item, 1)
+                                                removeFromWish(item.id)
+                                            }}>
+
+                                        </button>
                                         <button
                                             className="btn btn-danger"
                                             onClick={() => removeFromWish(item.id)}>
@@ -48,6 +58,14 @@ export default function Wish() {
                     ))}
                 </div>
                 <div className="cart-actions">
+                    <button className="btn btn-primary"
+                        onClick={() => {
+                            wishlist.forEach((item) => addToCart(item, 1))
+                            clearWish()
+                        }}>
+                        <i></i>Aggiungi tutto al carrello
+                    </button>
+
                     <Link to="/search" className="btn btn-outline-secondary">
                         Continua shopping
                     </Link>

@@ -27,12 +27,17 @@ export function WishProvider({ children }) {
     const isInWish = (id) => {
         return wishlist.some((item) => item.id === id)
     }
+    const clearWish = () => {
+        setWishlist([])
+    }
 
     return (
-        <WishContext.Provider value={{ wishlist, addToWish, removeFromWish, isInWish }}>
+        <WishContext.Provider value={{ wishlist, addToWish, removeFromWish, isInWish, clearWish }}>
             {children}
         </WishContext.Provider>
     )
+
+
 
 }
 
