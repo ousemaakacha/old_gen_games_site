@@ -8,7 +8,15 @@ export default function Cart() {
     const [showForm, setShowForm] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [form, setForm] = useState({ name: "", surname: "", email: "", address: "" });
+    const [form, setForm] = useState({
+        name: "",
+        surname: "",
+        email: "",
+        via: "",
+        civico: "",
+        citta: "",
+        cap: ""
+    });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,7 +25,15 @@ export default function Cart() {
 
         try {
             const items = cart.map(item => ({ article_id: item.article.id, quantity: item.quantity }));
-            const payload = { ...form, items };
+            // Combina i campi indirizzo in una singola stringa
+            const address = `${form.via} ${form.civico}, ${form.cap} ${form.citta}`;
+            const payload = {
+                name: form.name,
+                surname: form.surname,
+                email: form.email,
+                address,
+                items
+            };
 
             console.log("Invio checkout:", payload);
 
@@ -31,21 +47,35 @@ export default function Cart() {
             const contentType = res.headers.get("content-type");
             console.log("Content-Type:", contentType);
 
+            // Leggi la risposta come testo prima
+            const text = await res.text();
+            console.log("Response text:", text);
+
+            if (!res.ok) {
+                throw new Error(text || "Errore checkout");
+            }
+
+            // Prova a parsare come JSON, altrimenti usa il testo
             let data;
-            if (contentType && contentType.includes("application/json")) {
-                data = await res.json();
-            } else {
-                const text = await res.text();
-                console.log("Response text:", text);
-                throw new Error("Il server non ha restituito JSON: " + text);
+            try {
+                data = JSON.parse(text);
+            } catch {
+                data = text;
             }
 
             console.log("Response data:", data);
 
-            if (!res.ok) throw new Error(data.error || "Errore checkout");
-
+            const totale = getTotalPrice().toFixed(2);
             clearCart();
-            alert(`Ordine #${data.order_id} completato! Totale: €${data.total}`);
+
+            // Gestisce vari tipi di risposta dal backend
+            if (data === true || data === "true" || data.success || text === "true") {
+                alert(`Ordine completato con successo! Totale: €${totale}`);
+            } else if (data.order_id) {
+                alert(`Ordine #${data.order_id} completato! Totale: €${data.total || totale}`);
+            } else {
+                alert(`Ordine completato! Totale: €${totale}`);
+            }
             navigate("/");
         } catch (err) {
             console.error("Errore checkout:", err);
@@ -138,11 +168,34 @@ export default function Cart() {
                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                     required
                                 />
-                                <textarea
-                                    placeholder="Indirizzo completo"
-                                    value={form.address}
-                                    onChange={(e) => setForm({ ...form, address: e.target.value })}
-                                    rows="3"
+                                <input
+                                    type="text"
+                                    placeholder="Via"
+                                    value={form.via}
+                                    onChange={(e) => setForm({ ...form, via: e.target.value })}
+                                    required
+                                />
+                                <div className="address-row">
+                                    <input
+                                        type="text"
+                                        placeholder="N. Civico"
+                                        value={form.civico}
+                                        onChange={(e) => setForm({ ...form, civico: e.target.value })}
+                                        required
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="CAP"
+                                        value={form.cap}
+                                        onChange={(e) => setForm({ ...form, cap: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Città"
+                                    value={form.citta}
+                                    onChange={(e) => setForm({ ...form, citta: e.target.value })}
                                     required
                                 />
 

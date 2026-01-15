@@ -1,21 +1,47 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+const PRODUCTS_PER_PAGE = 4;
+const TOTAL_PAGES = 4;
+
 export default function Home() {
   const navigate = useNavigate();
   const [featured, setFeatured] = useState([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     async function loadFeatured() {
       try {
         const res = await fetch("/api/articles");
-        if (!res.ok) return;
+        if (!res.ok) {
+          console.log("API non raggiungibile, status:", res.status);
+          return;
+        }
         const data = await res.json();
         const list = Array.isArray(data) ? data : (data.data || []);
-        // Mescola array e prendi 5 casuali
-        const shuffled = [...list].sort(() => Math.random() - 0.5);
-        setFeatured(shuffled.slice(0, 5));
+
+        // Raggruppa per categoria
+        const byCategory = {};
+        list.forEach(product => {
+          const cat = product.categorie || "Altro";
+          if (!byCategory[cat]) byCategory[cat] = [];
+          byCategory[cat].push(product);
+        });
+
+        // Prendi le prime 4 categorie
+        const categories = Object.keys(byCategory).slice(0, 4);
+
+        // Per ogni pagina, prendi 1 prodotto da ogni categoria
+        const selected = [];
+        for (let page = 0; page < TOTAL_PAGES; page++) {
+          for (const cat of categories) {
+            if (byCategory[cat][page]) {
+              selected.push(byCategory[cat][page]);
+            }
+          }
+        }
+
+        setFeatured(selected);
       } catch (e) {
         console.error("Errore caricamento prodotti:", e);
       }
@@ -28,13 +54,21 @@ export default function Home() {
     navigate("/search");
   }
 
-  function nextSlide() {
-    setCurrentSlide((prev) => (prev + 1) % featured.length);
+  const totalPages = Math.ceil(featured.length / PRODUCTS_PER_PAGE);
+
+  function nextPage() {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
   }
 
-  function prevSlide() {
-    setCurrentSlide((prev) => (prev - 1 + featured.length) % featured.length);
+  function prevPage() {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
   }
+
+  // Prodotti della pagina corrente
+  const currentProducts = featured.slice(
+    currentPage * PRODUCTS_PER_PAGE,
+    (currentPage + 1) * PRODUCTS_PER_PAGE
+  );
 
   return (
     <main className="pb-4">
@@ -51,36 +85,37 @@ export default function Home() {
           <div className="carousel-section">
             <h2 className="carousel-title">In primo piano</h2>
             <div className="carousel">
-              <button className="carousel-btn carousel-btn-prev" onClick={prevSlide}>
+              <button className="carousel-btn carousel-btn-prev" onClick={prevPage}>
                 &#8249;
               </button>
-              <div className="carousel-track">
-                {featured.map((product, index) => (
+              <div className="carousel-grid">
+                {currentProducts.map((product) => (
                   <div
                     key={product.id}
-                    className={`carousel-slide ${index === currentSlide ? "active" : ""}`}
+                    className="carousel-item"
                     onClick={() => navigate(`/articoli/${product.slug}`)}
                   >
-                    <div className="carousel-image">
+                    <div className="carousel-item-image">
                       <img src={product.image} alt={product.name} />
                     </div>
-                    <div className="carousel-info">
+                    <div className="carousel-item-info">
+                      <span className="carousel-item-category">{product.categorie}</span>
                       <h3>{product.name}</h3>
-                      <p className="carousel-price">€ {product.price}</p>
+                      <p className="carousel-item-price">€ {product.price}</p>
                     </div>
                   </div>
                 ))}
               </div>
-              <button className="carousel-btn carousel-btn-next" onClick={nextSlide}>
+              <button className="carousel-btn carousel-btn-next" onClick={nextPage}>
                 &#8250;
               </button>
             </div>
             <div className="carousel-dots">
-              {featured.map((_, index) => (
+              {Array.from({ length: totalPages }).map((_, index) => (
                 <button
                   key={index}
-                  className={`carousel-dot ${index === currentSlide ? "active" : ""}`}
-                  onClick={() => setCurrentSlide(index)}
+                  className={`carousel-dot ${index === currentPage ? "active" : ""}`}
+                  onClick={() => setCurrentPage(index)}
                 />
               ))}
             </div>

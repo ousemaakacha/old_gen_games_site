@@ -45,7 +45,7 @@ export default function ProductDetail() {
             <main className="py-4">
                 <div className="container">
                     <div className="alert alert-danger">{error}</div>
-                    <Link to="/" className="btn btn-primary">Torna alla Home</Link>
+                    <Link to="/search" className="btn btn-primary">Tutti i prodotti</Link>
                 </div>
             </main>
         );
@@ -56,7 +56,7 @@ export default function ProductDetail() {
             <main className="py-4">
                 <div className="container">
                     <div className="alert alert-warning">Prodotto non trovato</div>
-                    <Link to="/" className="btn btn-primary">Torna alla Home</Link>
+                    <Link to="/search" className="btn btn-primary">Tutti i prodotti</Link>
                 </div>
             </main>
         );
@@ -65,7 +65,7 @@ export default function ProductDetail() {
     return (
         <main className="py-4">
             <div className="container">
-                <Link to="/" className="btn btn-outline-secondary mb-4">← Torna alla Home</Link>
+                <Link to="/search" className="btn btn-outline-secondary mb-4">← Tutti i prodotti</Link>
                 <div className="detail-card">
                     <div className="row g-0">
                         <div className="col-12 col-md-5">
