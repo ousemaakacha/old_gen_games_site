@@ -10,26 +10,31 @@ export default function Navbar() {
             <div className="container navbar-container">
                 <div className="d-flex align-items-center gap-2">
                     <a href="/">
-                    <img
-                        src="/logo.png"
-                        alt="Logo"
-                        width="60"
-                        height="60"
-                        className="d-inline-block align-text-top"
+                        <img
+                            src="/logo.png"
+                            alt="Logo"
+                            width="60"
+                            height="60"
+                            className="d-inline-block align-text-top"
 
-                    />
+                        />
                     </a>
-                <Link className="navbar-brand" to="/">METAL GAMES SOLID SHOP</Link>
+                    <Link className="navbar-brand" to="/">METAL GAMES SOLID SHOP</Link>
 
                 </div>
-                <Link className="cart-icon position-relative" to="/cart">
-                    <i className="bi bi-cart3"></i>
-                    {itemCount > 0 && (
-                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {itemCount}
-                        </span>
-                    )}
-                </Link>
+                <div>
+                    <Link className="wish-icon position-relative" to={"/wish"}>
+                        <i className="bi bi-heart"></i>
+                    </Link>
+                    <Link className="cart-icon position-relative" to="/cart">
+                        <i className="bi bi-cart3"></i>
+                        {itemCount > 0 && (
+                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {itemCount}
+                            </span>
+                        )}
+                    </Link>
+                </div>
             </div>
         </nav>
     );

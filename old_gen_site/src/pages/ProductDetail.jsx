@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useWish } from "../context/WishContext";
 
 export default function ProductDetail() {
     const { slug } = useParams();
     const { addToCart } = useCart();
+    const { addToWish, removeFromWish, isInWish } = useWish()
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -160,7 +162,7 @@ export default function ProductDetail() {
 
                                     <div>
                                         <button
-                                            className="btn btn-primary btn-lg w-100"
+                                            className="btn btn-primary btn-lg"
                                             disabled={article.quantity <= 0}
                                             onClick={() => {
                                                 addToCart(article, quantity);
@@ -169,6 +171,18 @@ export default function ProductDetail() {
                                             }}
                                         >
                                             <i className="bi bi-cart-plus"></i> Aggiungi al carrello
+                                        </button>
+                                        <button
+                                            className={`btn btn-lg ${isInWish(article.id)
+                                                ? "btn-danger"
+                                                : "btn-outline-primary"
+                                                }`}
+                                            onClick={() => {
+                                                isInWish(article.id)
+                                                    ? removeFromWish(article.id)
+                                                    : addToWish(article);
+                                            }}>
+                                            <i className={`bi ${isInWish(article.id) ? "bi-heart-fill" : "bi-heart"}`}></i>
                                         </button>
                                     </div>
                                 </div>

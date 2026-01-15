@@ -8,6 +8,8 @@ import Footer from "./components/Footer.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
 import Cart from "./pages/Cart.jsx";
 import WelcomeModal from "./components/WelcomeModal";
+import { WishProvider } from "./context/WishContext.jsx";
+import Wish from "./pages/Wish.jsx";
 
 
 export default function App() {
@@ -26,25 +28,28 @@ export default function App() {
   };
 
   return (
-    <CartProvider>
-      <div className="app-wrapper">
-        <Navbar />
-        <WelcomeModal />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/articoli/:slug" element={<ProductDetail />} />
-          <Route path="/cart" element={<Cart />} />
-        </Routes>
-        <Footer />
-        <button
-          className={`scroll-top-btn ${showScrollTop ? "visible" : ""}`}
-          onClick={scrollToTop}
-          aria-label="Torna su"
-        >
-          ↑
-        </button>
-      </div>
-    </CartProvider>
+    <WishProvider>
+      <CartProvider>
+        <div className="app-wrapper">
+          <Navbar />
+          <WelcomeModal />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/articoli/:slug" element={<ProductDetail />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/wish" element={<Wish />} />
+          </Routes>
+          <Footer />
+          <button
+            className={`scroll-top-btn ${showScrollTop ? "visible" : ""}`}
+            onClick={scrollToTop}
+            aria-label="Torna su"
+          >
+            ↑
+          </button>
+        </div>
+      </CartProvider>
+    </WishProvider>
   );
 }
