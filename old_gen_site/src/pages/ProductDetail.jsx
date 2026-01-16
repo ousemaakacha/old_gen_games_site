@@ -234,7 +234,7 @@ export default function ProductDetail() {
                             {relatedProducts.map((product) => (
                                 <Link
                                     key={product.id || product.slug}
-                                    to={`/product/${product.slug}`}
+                                    to={`/articoli/${product.slug}`}
                                     className="related-card"
                                 >
                                     <div className="related-card-image">
