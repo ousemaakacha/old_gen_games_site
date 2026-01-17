@@ -50,8 +50,7 @@ export default function Home() {
   }, []);
 
   function goToCategory(cat) {
-    localStorage.setItem("category", cat);
-    navigate("/search");
+    navigate(`/search?categorie=${encodeURIComponent(cat)}`);
   }
 
   const totalPages = Math.ceil(featured.length / PRODUCTS_PER_PAGE);

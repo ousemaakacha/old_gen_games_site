@@ -6,24 +6,43 @@ export default function Search() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [search, setSearch] = useState(searchParams.get("q") || "");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [category, setCategory] = useState(() => {
-    return localStorage.getItem("category") || "";
-  });
-  const [sortBy, setSortBy] = useState(() => {
-    return localStorage.getItem("sortBy") || "";
-  });
+
+  // Tutti i filtri vengono letti dall'URL (condivisibile)
+  const search = searchParams.get("q") || "";
+  const category = searchParams.get("categorie") || "";
+  const sortBy = searchParams.get("sort") || "";
+
+  const [searchInput, setSearchInput] = useState(search);
   const PAGE_SIZE = 12;
   const [page, setPage] = useState(1);
+
+  // Funzione helper per aggiornare i query params
+  const updateParams = (updates) => {
+    const newParams = new URLSearchParams(searchParams);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) {
+        newParams.set(key, value);
+      } else {
+        newParams.delete(key);
+      }
+    });
+    setSearchParams(newParams);
+  };
+
+  // Sincronizza searchInput quando cambia l'URL (es. navigazione indietro)
+  useEffect(() => {
+    setSearchInput(search);
+  }, [search]);
 
   // Debounce per la ricerca - aspetta 500ms dopo l'ultimo carattere
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearch(search);
+      if (searchInput !== search) {
+        updateParams({ q: searchInput });
+      }
     }, 500);
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [searchInput]);
 
   useEffect(() => {
     async function loadArticles() {
@@ -34,7 +53,17 @@ export default function Search() {
         // Costruisco i query params per il backend
         const params = new URLSearchParams();
         if (category) params.append("categorie", category);
-        if (debouncedSearch) params.append("name", debouncedSearch);
+        if (search) params.append("name", search);
+        // Mappa i valori del sort frontend ai valori accettati dal backend
+        const sortMap = {
+          "price-asc": "price_asc",
+          "price-desc": "price_desc",
+          "name-asc": "name_asc",
+          "name-desc": "name_desc",
+        };
+        if (sortBy && sortMap[sortBy]) {
+          params.append("sort", sortMap[sortBy]);
+        }
 
         const url = `/api/articles${params.toString() ? `?${params.toString()}` : ""}`;
         const res = await fetch(url);
@@ -49,29 +78,13 @@ export default function Search() {
       }
     }
     loadArticles();
-  }, [category, debouncedSearch]);
+  }, [category, search, sortBy]);
 
   // Categorie valide dal backend
   const categories = ["Videogames", "Consoles", "Collectibles", "Accessories"];
 
-  // Ordinamento
-  const sorted = [...articles].sort((a, b) => {
-    if (sortBy === "price-asc") {
-      return parseFloat(a.price) - parseFloat(b.price);
-    }
-    if (sortBy === "price-desc") {
-      return parseFloat(b.price) - parseFloat(a.price);
-    }
-    if (sortBy === "name-asc") {
-      return (a.name || "").localeCompare(b.name || "");
-    }
-    if (sortBy === "name-desc") {
-      return (b.name || "").localeCompare(a.name || "");
-    }
-    return 0;
-  });
-
-  const visible = sorted.slice(0, page * PAGE_SIZE);
+  // Il backend gestisce l'ordinamento, quindi usiamo direttamente articles
+  const visible = articles.slice(0, page * PAGE_SIZE);
 
   return (
     <main className="pb-4">
@@ -85,10 +98,8 @@ export default function Search() {
               className="form-select"
               value={category}
               onChange={(e) => {
-                const value = e.target.value;
-                setCategory(value);
+                updateParams({ categorie: e.target.value });
                 setPage(1);
-                localStorage.setItem("category", value);
               }}
             >
               <option value="">Tutte le categorie</option>
@@ -100,10 +111,8 @@ export default function Search() {
               className="form-select"
               value={sortBy}
               onChange={(e) => {
-                const value = e.target.value;
-                setSortBy(value);
+                updateParams({ sort: e.target.value });
                 setPage(1);
-                localStorage.setItem("sortBy", value);
               }}
             >
               <option value="">Ordina per...</option>
@@ -115,14 +124,11 @@ export default function Search() {
             <input
               className="form-control"
               placeholder="Cerca per nome..."
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              value={searchInput}
+              onChange={(e) => { setSearchInput(e.target.value); setPage(1); }}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  const params = new URLSearchParams();
-                  if (search.trim()) params.set("q", search.trim());
-                  if (category) params.set("categoria", category);
-                  setSearchParams(params);
+                if (e.key === "Enter" || e.key === "Tab") {
+                  updateParams({ q: searchInput.trim() });
                 }
               }}
             />
@@ -132,6 +138,10 @@ export default function Search() {
           {loading && <div className="alert alert-info">LOADING...</div>}
           {error && <div className="alert alert-danger">{error}</div>}
         </div>
+
+        {!loading && !error && articles.length === 0 && (
+          <div className="alert alert-warning">Nessun prodotto disponibile</div>
+        )}
 
         <div className="row g-3">
           {!loading && !error && visible.map((a) => {
@@ -168,7 +178,7 @@ export default function Search() {
           })}
         </div>
 
-        {visible.length < sorted.length && (
+        {visible.length < articles.length && (
           <div className="d-flex justify-content-center mt-4">
             <button className="btn btn-outline-primary" onClick={() => setPage(page + 1)}>Load more</button>
           </div>

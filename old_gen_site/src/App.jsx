@@ -10,6 +10,8 @@ import Cart from "./pages/Cart.jsx";
 import WelcomeModal from "./components/WelcomeModal";
 import { WishProvider } from "./context/WishContext.jsx";
 import Wish from "./pages/Wish.jsx";
+import TermsAndConditions from "./pages/TermsAndConditions.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 
 export default function App() {
@@ -39,6 +41,8 @@ export default function App() {
             <Route path="/articoli/:slug" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/wish" element={<Wish />} />
+            <Route path="/termini-e-condizioni" element={<TermsAndConditions />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
           <button

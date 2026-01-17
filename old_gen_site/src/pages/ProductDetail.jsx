@@ -185,12 +185,6 @@ export default function ProductDetail() {
                                         )}
                                     </div>
 
-                                    {addedToCart && (
-                                        <div className="alert alert-success py-2 mb-2">
-                                            Articolo aggiunto al carrello!
-                                        </div>
-                                    )}
-
                                     <div className="detail-buttons">
                                         <button
                                             className="btn btn-primary btn-lg"
@@ -220,6 +214,12 @@ export default function ProductDetail() {
                                             <i className={`bi ${isInWish(article.id) ? "bi-heart-fill" : "bi-heart"}`}></i>
                                         </button>
                                     </div>
+
+                                    {addedToCart && (
+                                        <div className="alert alert-success py-2 mt-3 mb-0">
+                                            Articolo aggiunto al carrello!
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
