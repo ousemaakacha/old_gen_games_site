@@ -45,7 +45,7 @@ export default function Wish() {
                                     </div>
                                     <div className="wish-card-actions">
                                         <Link
-                                            to={`/product/${item.slug}`}
+                                            to={`/articoli/${item.slug}`}
                                             className="btn btn-primary">
                                             Dettagli
                                         </Link>
