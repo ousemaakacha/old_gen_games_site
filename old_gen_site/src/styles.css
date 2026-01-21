@@ -594,10 +594,7 @@ main h1.h3,
     color: var(--brown-dark);
     margin-bottom: 0.5rem;
     min-height: 3rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    word-wrap: break-word;
 }
 
 .card-text {
@@ -606,10 +603,7 @@ main h1.h3,
     color: var(--brown-light) !important;
     margin-bottom: 0.75rem;
     min-height: 1.8em;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    word-wrap: break-word;
     flex-grow: 1;
 }
 
