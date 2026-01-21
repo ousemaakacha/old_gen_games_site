@@ -165,7 +165,7 @@ export default function Search() {
                       <div className="fw-semibold">{price ? `€ ${price}` : "Prezzo N/D"}</div>
                       {slug ? (
                         <Link className="btn btn-sm btn-outline-primary" to={`/articoli/${slug}`}>
-                          DETAILS
+                          Dettagli
                         </Link>
                       ) : (
                         <button className="btn btn-sm btn-outline-secondary" disabled>Dettagli</button>
@@ -180,7 +180,7 @@ export default function Search() {
 
         {visible.length < articles.length && (
           <div className="d-flex justify-content-center mt-4">
-            <button className="btn btn-outline-primary" onClick={() => setPage(page + 1)}>Load more</button>
+            <button className="btn btn-outline-primary" onClick={() => setPage(page + 1)}>Carica più prodotti</button>
           </div>
         )}
       </div>

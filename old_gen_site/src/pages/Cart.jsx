@@ -16,6 +16,12 @@ export default function Cart() {
         civico: "",
         citta: "",
         cap: "",
+        cardName: "",
+        cardSurname: "",
+        cardNumber: "",
+        cardExpiryMonth: "",
+        cardExpiryYear: "",
+        cardCvv: "",
         terms: false
     });
     const [stockWarning, setStockWarning] = useState(null);
@@ -287,14 +293,99 @@ export default function Cart() {
                                     />
                                 </div>
 
-                                <div className="form-group terms-group">
+                                <h3>Dati carta di credito</h3>
+                                <div className="form-group">
+                                    <label className="form-label">Nome intestatario <span className="required-asterisk">*</span></label>
+                                    <input
+                                        type="text"
+                                        placeholder="Nome sulla carta"
+                                        value={form.cardName}
+                                        onChange={(e) => setForm({ ...form, cardName: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Cognome intestatario <span className="required-asterisk">*</span></label>
+                                    <input
+                                        type="text"
+                                        placeholder="Cognome sulla carta"
+                                        value={form.cardSurname}
+                                        onChange={(e) => setForm({ ...form, cardSurname: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Numero carta <span className="required-asterisk">*</span></label>
+                                    <input
+                                        type="text"
+                                        placeholder="1234 5678 9012 3456"
+                                        value={form.cardNumber}
+                                        onChange={(e) => setForm({ ...form, cardNumber: e.target.value })}
+                                        maxLength="19"
+                                        required
+                                    />
+                                </div>
+                                <div className="address-row">
+                                    <div className="form-group">
+                                        <label className="form-label">Mese <span className="required-asterisk">*</span></label>
+                                        <select
+                                            value={form.cardExpiryMonth}
+                                            onChange={(e) => setForm({ ...form, cardExpiryMonth: e.target.value })}
+                                            required
+                                        >
+                                            <option value="">MM</option>
+                                            <option value="01">01 - Gennaio</option>
+                                            <option value="02">02 - Febbraio</option>
+                                            <option value="03">03 - Marzo</option>
+                                            <option value="04">04 - Aprile</option>
+                                            <option value="05">05 - Maggio</option>
+                                            <option value="06">06 - Giugno</option>
+                                            <option value="07">07 - Luglio</option>
+                                            <option value="08">08 - Agosto</option>
+                                            <option value="09">09 - Settembre</option>
+                                            <option value="10">10 - Ottobre</option>
+                                            <option value="11">11 - Novembre</option>
+                                            <option value="12">12 - Dicembre</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Anno <span className="required-asterisk">*</span></label>
+                                        <select
+                                            value={form.cardExpiryYear}
+                                            onChange={(e) => setForm({ ...form, cardExpiryYear: e.target.value })}
+                                            required
+                                        >
+                                            <option value="">AA</option>
+                                            {Array.from({ length: 10 }, (_, i) => {
+                                                const year = new Date().getFullYear() + i;
+                                                return (
+                                                    <option key={year} value={year}>
+                                                        {year}
+                                                    </option>
+                                                );
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">CVV <span className="required-asterisk">*</span></label>
+                                        <input
+                                            type="text"
+                                            placeholder="123"
+                                            value={form.cardCvv}
+                                            onChange={(e) => setForm({ ...form, cardCvv: e.target.value })}
+                                            maxLength="4"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="terms-group">
                                     <label className="terms-label">
                                         <input
                                             type="checkbox"
                                             checked={form.terms}
                                             onChange={(e) => setForm({ ...form, terms: e.target.checked })}
                                             required
-                                            className="terms-checkbox"
                                         />
                                         <span>Accetto i <a href="/termini-e-condizioni" target="_blank" rel="noopener noreferrer">Termini e Condizioni</a> <span className="required-asterisk">*</span></span>
                                     </label>
