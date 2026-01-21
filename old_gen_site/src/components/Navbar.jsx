@@ -26,18 +26,18 @@ export default function Navbar() {
 
                 </div>
                 <div className="navbar-icons">
-                    <Link className="wish-icon position-relative" to={"/wish"}>
+                    <Link className="wish-icon" to={"/wish"}>
                         <i className="bi bi-heart"></i>
                         {wishCount > 0 && (
-                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <span className="badge rounded-pill bg-danger">
                                 {wishCount}
                             </span>
                         )}
                     </Link>
-                    <Link className="cart-icon position-relative" to="/cart">
+                    <Link className="cart-icon" to="/cart">
                         <i className="bi bi-cart-plus"></i>
                         {itemCount > 0 && (
-                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <span className="badge rounded-pill bg-danger">
                                 {itemCount}
                             </span>
                         )}
