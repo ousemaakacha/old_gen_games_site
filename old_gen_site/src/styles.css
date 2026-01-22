@@ -1428,9 +1428,25 @@ main h1.h3,
 .wish-btn-wrapper .stock-warning {
     position: absolute;
     top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    left: auto;
+    right: 0;
+    transform: none;
     margin-top: 0.5rem;
+    white-space: normal;
+    min-width: 180px;
+    text-align: center;
+    animation: fadeInWish 0.3s ease;
+}
+
+@keyframes fadeInWish {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .btn-wish-action {
